@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Towed Vehicles</title>
+        <style>
+            p, h1 {font-family: Arial;}
+            p {font-size:1.5em;line-height:1.5em; margin-left: 24px;}
+            pre {font-size: 2em;}
+            .Fail {background-color: red; border: 10px blue;}
+            div{border: 5px blue; margin:10px; border-radius: 5px; background-color: #5F6F97;}
+        </style>
+    </head>
+    <body>
+    <h1>Towed Vehicles in Chicago</h1>
+    
+    <div id="page">
+    <p>This page makes a call to the City of Chicago Data Portal, to get data of Towed Vehicles Chicago.
+        <br>
+        <br>
+         Number of the License plate 
+            <br>
+            <input id="textBox" type="text" name="Plate Number: " placeholder="Enter plate number">
+            <button id="buttonBox" type="button">Find My Car</button>
+    </p>   
+
+    </div>
+    
+    <div id="results"></div>
+    
+    <p></p>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    
+    <script>
+        /*
+            This script retrieves 311 towed vehicle request data for 
+            from the 
+            City of Chicago Data Portal
+            
+            This script doesn't update the DOM.
+        
+        
+        */
+
+    $(function () {
+        
+        // base URL to the towed vehicles data
+        var BaseURL = 'https://data.cityofchicago.org/resource/rp42-fxjt.json';
+        
+        // optional filters we're appending - status
+        var filters = '?plate=';
+        
+        // full URL
+        var Url = BaseURL + filters;
+        
+        console.log (Url);
+        
+        $("#buttonBox").attr("disabled", true);
+           
+            // jQuery command to retrieve json data
+            
+             $("#textBox").keyup(function(){ 
+                if ($("#textBox").val() == "") {
+                    $("#buttonBox").attr("disabled", true)
+                }
+                else {
+                    $("#buttonBox").attr("disabled", false);
+                }
+    });
+            
+            //more code to come
+            
+            $("#buttonBox").on("click", function() {
+                
+                $("#results").html("");
+                
+                var plateNumber = $("#textBox").val();
+           
+                var urlWithParams = Url + plateNumber;
+                console.log(urlWithParams);
+            
+            //more code to come
+                
+                $.getJSON(urlWithParams)
+                    .done (function (data) {
+                        
+                        console.log(data);
+                        
+                        var numRecords = data.length;
+                        
+                        var message = 
+                            "<h2>We found what you're looking for:  "
+                            + "</h2>";
+                        
+                        $("#results").append(message);
+                        
+            //more code to come
+            
+                if (numRecords > 0) {
+                            
+                $.each (data , 
+                    function (index, value) {
+                        var html = "<p>" 
+                            + "Make: " + value.make
+                            + "<br>" + "Inventory Number: " + value.inventory_number
+                            + "<br>Tow Date: " + value.tow_date
+                            + "<br>Towed to Address: " + value.towed_to_address
+                            + "<br>Tow Facility Phone: " + value.tow_facility_phone
+                            + "<br><br><a href='https://www.google.com/maps/place/" + value.towed_to_address + " Chicago, IL'>" + "Find the address on Google Maps! </a>"
+                            + "</p>";
+                                   
+                $("#results").append(html);
+
+                    }
+                            );                         
+                        }
+                    });
+                });
+            });
+    </script>
+    </body>
+</html>
