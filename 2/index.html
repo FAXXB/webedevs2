@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Bus Tracker vol. 1</title>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  
+  <style>
+  body {
+      background-color:#b258fc;
+      color:#af0516;
+      font-size:17px;
+  }
+  h3 {
+    color:#b400c1;
+  }
+  h1 {
+    color:#010211;
+  }
+  div {
+    margin:center;
+  }
+  </style>
+  <link rel="manifest" href="/manifest.json">
+  <!-- Add to home screen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Weather PWA">
+  <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
+<!-- Add to home screen on Windows -->
+ <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
+  <meta name="msapplication-TileColor" content="#2F3BA2">
+  
+
+</head>
+<body>
+  
+  <div id="form">
+        <button type="button" id="btnSearch">Track Bus</button>
+    </div>
+
+ 
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <script>
+      
+          function busRoutes()
+        {
+      
+          $(function() {
+            
+          
+            var apiPassThruUrl = "https://polar-garden-75406.herokuapp.com/apiPassThru.php";
+            
+            var apiEndpoint = "http://www.ctabustracker.com/bustime/api/v2/getpredictions";
+          
+              $.ajax({
+                url: apiPassThruUrl,
+                dataType: "json",
+                method: 'GET',
+                data: {"apiEndpoint": apiEndpoint,
+                        "key" : "gLdXiWi7P8fFLmErKzvNZSLA2",
+                        "format":"json",
+                        "stpid":"8195,8417,12569,12527",
+                        "top":""
+                }
+                
+                
+                
+              }).done (function (data) {
+                console.log(data);
+                $("body").append("<h1>Bus Times</h1>");
+               
+                $.each(data["bustime-response"]["prd"], function(i,v) {
+                   
+                    
+                   var html ="<div>"
+                    +"<h3>"
+                    +"Bus Route: "
+                    +"</h3>"
+                    +v.rt
+                    +"<br>"
+                    +"Direction: "
+                    +v.rtdir
+                    +"<br>"
+                    +"Time: "
+                    +v.tmstmp
+                    +"<br>"
+                    +"Predicted Time: "
+                    +v.prdctdn
+                    +"<br>"
+                    +"</div>";
+                    
+                     $("body").append(html);
+                  });
+  
+                });
+            });
+          }
+      
+      busRoutes();
+</script>
+ 
+</body>
+</html>
